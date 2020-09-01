@@ -32,9 +32,15 @@ class RegisterPage extends StatelessWidget {
                             style: (Theme.of(context).textTheme.headline6)),
                         TextFormField(
                           controller: _usernameController,
+
                           decoration: InputDecoration(
-                              labelText: "username", hintText: ""),
+                              labelStyle: TextStyle(
+                                color: Colors.blue,
+                              ),
+                              labelText: "username",
+                              hintText: ""),
                           autovalidate: false,
+
                           //muestra si no hay texto
                           validator: (String value) {
                             return (value.isEmpty) ? " enter username" : null;

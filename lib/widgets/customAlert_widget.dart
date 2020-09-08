@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:web_app/firebase/firestore_service.dart';
+import 'package:web_app/models/note_model.dart';
 
-onAlertAutentication(BuildContext context, String text) {
+//tell user to wait
+onAlertWait(BuildContext context, String text) {
   showDialog(
       context: context,
       child: SimpleDialog(
         title: Center(
-          child: Text(text),
+          child: Column(
+            children: [
+              Text(text),
+              Container(
+                  width: 150.0,
+                  height: 150.0,
+                  child: Image.asset("assets/Loading_2.gif")),
+            ],
+          ),
         ),
       ));
 }
 
+//something wrong with auth service
 onErrorAuth(BuildContext context, String error) {
   showDialog(
       context: context,
@@ -33,7 +46,62 @@ onErrorAuth(BuildContext context, String error) {
           SimpleDialogOption(
             child: FlatButton(
               color: Colors.blueAccent,
-              onPressed: () => Navigator.of(context).popAndPushNamed("/login"),
+              onPressed: () => Navigator.of(context).popAndPushNamed("/"),
+              child: Text("Aceptar"),
+            ),
+          ),
+        ],
+      ));
+}
+
+onCreateALert(BuildContext context, String texto) {
+  final titleController = TextEditingController();
+  titleController.text = texto;
+  showDialog(
+      context: context,
+      child: SimpleDialog(
+        title: Row(
+          children: <Widget>[
+            Icon(
+              Icons.file_copy,
+              color: Colors.blueGrey,
+            ),
+            Center(child: Text("New Note")),
+          ],
+        ),
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.all(15.0),
+            child: TextFormField(
+              controller: titleController,
+
+              decoration: InputDecoration(
+                  labelStyle: TextStyle(
+                    color: Colors.blue,
+                  ),
+                  labelText: "title",
+                  hintText: ""),
+              autovalidate: false,
+
+              //muestra si no hay texto
+              validator: (String value) {
+                return (value.isEmpty) ? " enter username" : null;
+              },
+            ),
+          ),
+          SimpleDialogOption(
+            child: FlatButton(
+              color: Colors.blueAccent,
+              onPressed: () {
+                final newNote = Note(
+                  title: titleController.text,
+                  body: "..",
+                );
+
+                Provider.of<Firestore>(context, listen: false)
+                    .firestoreCREATE(newNote);
+                Navigator.of(context).pop();
+              },
               child: Text("Aceptar"),
             ),
           ),

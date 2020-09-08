@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:web_app/firebase/authentication_service.dart';
+import 'package:web_app/firebase/firestore_service.dart';
+import 'package:web_app/models/user_model.dart';
 import 'package:web_app/widgets/customAlert_widget.dart';
 
-class RegisterPage extends StatelessWidget {
+class RegisterPage extends StatefulWidget {
+  @override
+  _RegisterPageState createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
   final _usernameController = new TextEditingController();
+
   final _passController = new TextEditingController();
+
   final _emailController = new TextEditingController();
-  final _formKey = new GlobalKey<FormState>();
+
+  GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -83,27 +95,33 @@ class RegisterPage extends StatelessWidget {
                               onPressed: () async {
                                 _formKey.currentState.validate();
                                 if (_formKey.currentState.validate()) {
-                                  print("Signing in.......");
-                                  print(_emailController.text);
+                                  print(_usernameController.text +
+                                      _emailController.text +
+                                      _passController.text);
+                                  onAlertWait(context, "please wait...");
 
-                                  onAlertAutentication(
-                                      context, "please wait...");
-
-                                  final List<String> results = [];
-                                  //     await Provider.of<Authentication>(
-                                  //             context,
-                                  //             listen: false)
-                                  //         .loginWithErrorMessage(
-                                  //             _usernameControler.text, _passController.text);
-
-                                  print("resultado login: " +
-                                      results[0] +
-                                      "  userID: " +
-                                      results[1]);
+                                  //userLogin AUTH-FIREBASE
+                                  final List<dynamic> results =
+                                      await Provider.of<Authentication>(context,
+                                              listen: false)
+                                          .newUserWithErrorMessage(
+                                              _usernameController.text,
+                                              _emailController.text,
+                                              _passController.text);
 
                                   if (results[0] == "success") {
-                                    // await Navigator.of(context)
-                                    //     .pushNamed("/settings");
+                                    //set Single User Object
+                                    Provider.of<User>(context, listen: false)
+                                        .setFromMap(results[1]);
+                                    //set username first because DB requieres it
+                                    Provider.of<User>(context, listen: false)
+                                        .setUsername(_usernameController.text);
+                                    //make user PATH
+                                    await Provider.of<Firestore>(context,
+                                            listen: false)
+                                        .makeUserDB();
+
+                                    Navigator.of(context).pushNamed("/home");
                                   } else
                                     onErrorAuth(context, results[0]);
                                 }

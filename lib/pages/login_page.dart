@@ -1,11 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:web_app/firebase/authentication_service.dart';
+import 'package:web_app/firebase/firestore_service.dart';
+import 'package:web_app/models/user_model.dart';
 import 'package:web_app/widgets/customAlert_widget.dart';
 import 'package:web_app/widgets/customTextLink_widget.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  //formkey is affecting whenever i want to get back
+  //so we need to clean the global key
+  @override
+  void dispose() {
+    //_formKey.currentState.dispose();
+    super.dispose();
+  }
+
   final _emailController = new TextEditingController();
+
   final _passController = new TextEditingController();
-  final _formKey = new GlobalKey<FormState>();
+
+  var _formKey = new GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -61,41 +80,55 @@ class LoginPage extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
                             //Colors.blue[800]
-                            CustomTextLink("Create Account", Colors.blue,
-                                Colors.purple, () {}),
+                            CustomTextLink(
+                                "Create Account", Colors.blue, Colors.purple,
+                                () {
+                              Navigator.of(context).pushNamed("/register");
+                            }),
                             Spacer(),
                             FlatButton(
-                              onPressed: () async {
-                                _formKey.currentState.validate();
-                                if (_formKey.currentState.validate()) {
-                                  print("Logging in.......");
+                                color: Theme.of(context).primaryColor,
+                                child: Text("login"),
+                                hoverColor: Colors.blue[300],
+                                onPressed: () async {
+                                  _formKey.currentState.validate();
+                                  if (_formKey.currentState.validate()) {
+                                    onAlertWait(context, "please wait...");
+                                    print("onCLick Logging in.......");
+                                    final List<dynamic> results =
+                                        await Provider.of<Authentication>(
+                                                context,
+                                                listen: false)
+                                            .loginWithErrorMessage(
+                                                _emailController.text,
+                                                _passController.text);
 
-                                  onAlertAutentication(
-                                      context, "please wait...");
+                                    if (results[0] == "success") {
+                                      //set Single User Object
+                                      Provider.of<User>(context, listen: false)
+                                          .setFromMap(results[1]);
+                                      print(results[1]);
 
-                                  final List<String> results = [];
-                                  //     await Provider.of<Authentication>(
-                                  //             context,
-                                  //             listen: false)
-                                  //         .loginWithErrorMessage(
-                                  //             _usernameControler.text, _passController.text);
+                                      //no se usa makeuser DB porque ya se hizo en
+                                      //la creacion
+                                      //make user PATH
+                                      Provider.of<Firestore>(context,
+                                              listen: false)
+                                          .initUserPath();
 
-                                  print("resultado login: " +
-                                      results[0] +
-                                      "  userID: " +
-                                      results[1]);
+                                      String userName =
+                                          await Provider.of<Firestore>(context,
+                                                  listen: false)
+                                              .getFirebaseUsername();
+                                      Provider.of<User>(context, listen: false)
+                                          .setUsername(userName);
 
-                                  if (results[0] == "success") {
-                                    // await Navigator.of(context)
-                                    //     .pushNamed("/settings");
-                                  } else
-                                    onErrorAuth(context, results[0]);
-                                }
-                              },
-                              color: Theme.of(context).primaryColor,
-                              child: Text("login"),
-                              hoverColor: Colors.blue[300],
-                            ),
+                                      Navigator.of(context).pushNamed("/home");
+                                    } else {
+                                      onErrorAuth(context, results[0]);
+                                    }
+                                  }
+                                }),
                           ],
                         ),
                       ],

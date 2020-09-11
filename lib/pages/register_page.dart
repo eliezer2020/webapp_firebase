@@ -5,19 +5,14 @@ import 'package:web_app/firebase/firestore_service.dart';
 import 'package:web_app/models/user_model.dart';
 import 'package:web_app/widgets/customAlert_widget.dart';
 
-class RegisterPage extends StatefulWidget {
-  @override
-  _RegisterPageState createState() => _RegisterPageState();
-}
-
-class _RegisterPageState extends State<RegisterPage> {
+class RegisterPage extends StatelessWidget {
   final _usernameController = new TextEditingController();
 
   final _passController = new TextEditingController();
 
   final _emailController = new TextEditingController();
 
-  GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+  final _formKey = new GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {

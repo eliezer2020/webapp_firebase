@@ -9,36 +9,44 @@ import 'package:web_app/firebase/firestore_service.dart';
 import 'package:web_app/models/note_model.dart';
 
 import 'package:web_app/models/user_model.dart';
+import 'package:web_app/widgets/customAlert_widget.dart';
 import 'package:web_app/widgets/detailNotes_widget.dart';
 import 'package:web_app/widgets/MenuNotes_widget.dart';
 
 class HomePage extends StatelessWidget {
+  final listenStream;
+
+  const HomePage({Key key, this.listenStream}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     print("building home page");
-    final listenStream =
-        Provider.of<Firestore>(context, listen: true).fetchStreamData();
+    //meti la pata enseñar en mi curso
+    // final listenStream =
+    //   Provider.of<Firestore>(context, listen: true).fetchStreamData();
 
-    return Scaffold(
-      appBar: _customApbbar(context),
-      body: Container(
-        padding: EdgeInsets.all(25),
-        child: Row(
-          children: [
-            Expanded(
-              flex: 3,
-              child: menuNotes(context, listenStream),
-            ),
-            Expanded(
-                flex: 1,
-                child: Container(
-                    //color: Colors.red,
-                    )),
-            Expanded(
-              flex: 5,
-              child: detailNotes(context),
-            ),
-          ],
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        appBar: _customApbbar(context),
+        body: Container(
+          padding: EdgeInsets.all(25),
+          child: Row(
+            children: [
+              Expanded(
+                flex: 3,
+                child: menuNotes(context, listenStream),
+              ),
+              Expanded(
+                  flex: 1,
+                  child: Container(
+                      //color: Colors.red,
+                      )),
+              Expanded(
+                flex: 5,
+                child: detailNotes(context),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -82,6 +90,8 @@ class HomePage extends StatelessWidget {
             onPressed: () async {
               Provider.of<Authentication>(context, listen: false).singOut();
               Provider.of<User>(context, listen: false).clearUser();
+              Provider.of<NoteController>(context, listen: false)
+                  .disposeNoteController();
               Navigator.of(context).pushNamed("/");
             })
       ],

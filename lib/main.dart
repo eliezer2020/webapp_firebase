@@ -6,6 +6,7 @@ import 'package:web_app/firebase/authentication_service.dart';
 import 'package:web_app/firebase/firestore_service.dart';
 import 'package:web_app/pages/home_page.dart';
 import 'package:web_app/pages/login_page.dart';
+import 'package:web_app/pages/unknown_page.dart';
 
 import 'package:web_app/widgets/pageRouter_widget.dart';
 
@@ -40,8 +41,11 @@ class MyWebApp extends StatelessWidget {
       ],
       child: MaterialApp(
           title: "myWebApp",
-          home: LoginPage(),
+          home: PageRouter("/"),
           debugShowCheckedModeBanner: false,
+          onUnknownRoute: (settings) {
+            return MaterialPageRoute(builder: (context) => PageRouter("/"));
+          },
           onGenerateRoute: (settings) {
             return MaterialPageRoute(
                 builder: (context) => PageRouter(settings.name));

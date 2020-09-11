@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:web_app/controllers/noteController_controller.dart';
 import 'package:web_app/firebase/firestore_service.dart';
 import 'package:web_app/models/note_model.dart';
 
@@ -100,6 +101,43 @@ onCreateALert(BuildContext context, String texto) {
 
                 Provider.of<Firestore>(context, listen: false)
                     .firestoreCREATE(newNote);
+                Provider.of<NoteController>(context, listen: false)
+                    .setSelectedNote(newNote);
+                Navigator.of(context).pop();
+              },
+              child: Text("Aceptar"),
+            ),
+          ),
+        ],
+      ));
+}
+
+onDeleteALert(BuildContext context, String texto) {
+  final titleController = TextEditingController();
+  titleController.text = texto;
+  showDialog(
+      context: context,
+      child: SimpleDialog(
+        title: Row(
+          children: <Widget>[
+            Icon(
+              Icons.file_copy,
+              color: Colors.blueGrey,
+            ),
+            Center(child: Text(texto)),
+          ],
+        ),
+        children: <Widget>[
+          SimpleDialogOption(
+            child: FlatButton(
+              color: Colors.blueAccent,
+              onPressed: () async {
+                Note selectedNote =
+                    Provider.of<NoteController>(context, listen: false)
+                        .getSelectedNote();
+
+                await Provider.of<Firestore>(context, listen: false)
+                    .firestoreDELETE(selectedNote);
                 Navigator.of(context).pop();
               },
               child: Text("Aceptar"),

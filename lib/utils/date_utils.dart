@@ -7,7 +7,7 @@ String getCustomDate() {
       DateTime.now().month.toString() +
       "/" +
       DateTime.now().year.toString() +
-      " time:" +
+      " :" +
       DateTime.now().hour.toString() +
       ":" +
       DateTime.now().minute.toString();

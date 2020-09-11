@@ -114,7 +114,7 @@ class ListfromNote extends StatelessWidget {
         title: Text(note.title),
         onTap: () {
           Provider.of<NoteController>(context, listen: false)
-              .onNoteSelected(note);
+              .setSelectedNote(note);
         },
         leading: Icon(
           Icons.file_copy,

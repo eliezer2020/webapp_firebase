@@ -3,8 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:web_app/controllers/noteController_controller.dart';
 import 'package:web_app/firebase/firestore_service.dart';
 import 'package:web_app/models/note_model.dart';
+import 'package:web_app/widgets/customAlert_widget.dart';
 
 Widget detailNotes(BuildContext context) {
+  ScrollController myScroll = new ScrollController();
   return Container(
     child: Card(
       child: Column(
@@ -37,12 +39,19 @@ Widget detailNotes(BuildContext context) {
                   hoverColor: Colors.blue[200],
                   backgroundColor: Colors.transparent,
                   mini: true,
-                  onPressed: () {
-                    // Note selectedNote =
-                    //     Provider.of<NoteController>(context).getSelectedNote();
-                    // print(selectedNote.title);
-                    // Provider.of<Firestore>(context, listen: false)
-                    //     .firestoreUPDATE(selectedNote);
+                  onPressed: () async {
+                    Note selectedNote =
+                        Provider.of<NoteController>(context, listen: false)
+                            .getSelectedNote();
+                    selectedNote.body =
+                        Provider.of<NoteController>(context, listen: false)
+                            .myController
+                            .text;
+
+                    Provider.of<NoteController>(context, listen: false)
+                        .enableEditing();
+                    await Provider.of<Firestore>(context, listen: false)
+                        .firestoreUPDATE(selectedNote);
                   },
                   child: Icon(
                     Icons.save,
@@ -56,7 +65,9 @@ Widget detailNotes(BuildContext context) {
                   hoverColor: Colors.red[200],
                   backgroundColor: Colors.transparent,
                   mini: true,
-                  onPressed: () {},
+                  onPressed: () async {
+                    onDeleteALert(context, "Do you want to delete this note? ");
+                  },
                   child: Icon(
                     Icons.delete,
                     color: Colors.red[400],
@@ -68,14 +79,22 @@ Widget detailNotes(BuildContext context) {
               ],
             ),
           ),
-          SingleChildScrollView(
-            child: Container(
-                padding: EdgeInsets.all(25),
-                child: TextField(
-                  controller: Provider.of<NoteController>(context, listen: true)
-                      .myController,
-                  enabled: Provider.of<NoteController>(context, listen: true)
-                      .editing,
+          Expanded(
+            child: SingleChildScrollView(
+                controller: myScroll,
+                scrollDirection: Axis.vertical,
+                child: Container(
+                  padding: EdgeInsets.all(25),
+                  child: TextField(
+                    scrollController: myScroll,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    controller:
+                        Provider.of<NoteController>(context, listen: true)
+                            .myController,
+                    enabled: Provider.of<NoteController>(context, listen: true)
+                        .editing,
+                  ),
                 )),
           )
         ],

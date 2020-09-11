@@ -5,11 +5,6 @@ class NoteController extends ChangeNotifier {
   bool editing = false;
   TextEditingController myController = new TextEditingController();
   Note selectedNote;
-  @override
-  void removeListener(void Function() listener) {
-    // TODO: implement removeListener
-    super.removeListener(listener);
-  }
 
   //Edit Button
   void enableEditing() {
@@ -18,7 +13,7 @@ class NoteController extends ChangeNotifier {
   }
 
   //onNote selected
-  void onNoteSelected(Note note) {
+  void setSelectedNote(Note note) {
     editing = false;
     selectedNote = note;
     myController.text = note.body;
@@ -27,4 +22,8 @@ class NoteController extends ChangeNotifier {
   }
 
   Note getSelectedNote() => this.selectedNote;
+
+  void disposeNoteController() {
+    this.myController.clear();
+  }
 }

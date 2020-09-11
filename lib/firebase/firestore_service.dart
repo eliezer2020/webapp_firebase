@@ -48,7 +48,7 @@ class Firestore {
 
   firestoreDELETE(Note data) async {
     await firestoreInstance
-        .collection(path)
+        .collection(path + "/notes")
         .doc(data.documentID)
         .delete()
         .then((value) {
@@ -58,7 +58,7 @@ class Firestore {
 
   firestoreUPDATE(Note data) async {
     firestoreInstance
-        .collection(path)
+        .collection(path + "/notes")
         .doc(data.documentID)
         .update(data.toMap())
         .then((value) {

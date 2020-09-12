@@ -138,6 +138,8 @@ onDeleteALert(BuildContext context, String texto) {
 
                 await Provider.of<Firestore>(context, listen: false)
                     .firestoreDELETE(selectedNote);
+                Provider.of<NoteController>(context, listen: false)
+                    .disposeNoteController();
                 Navigator.of(context).pop();
               },
               child: Text("Aceptar"),

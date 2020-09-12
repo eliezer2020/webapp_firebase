@@ -86,6 +86,11 @@ Widget detailNotes(BuildContext context) {
                 child: Container(
                   padding: EdgeInsets.all(25),
                   child: TextField(
+                    decoration: InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
+                    ),
                     scrollController: myScroll,
                     keyboardType: TextInputType.multiline,
                     maxLines: null,

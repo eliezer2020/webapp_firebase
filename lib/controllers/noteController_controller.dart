@@ -9,6 +9,7 @@ class NoteController extends ChangeNotifier {
   //Edit Button
   void enableEditing() {
     editing = (editing == true) ? false : true;
+
     notifyListeners();
   }
 

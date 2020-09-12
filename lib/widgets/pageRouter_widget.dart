@@ -53,8 +53,8 @@ final mobileAlert = Material(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text("This app only works on full screen"),
-          Text("for mobile devices download it"),
-          CustomTextLink("here", Colors.blue, Colors.purple, () {}),
+          Text("for mobile devices download it here:"),
+          CustomTextLink("soon..", Colors.blue, Colors.purple, () {}),
         ],
       ),
     ),

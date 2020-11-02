@@ -54,7 +54,8 @@ Widget menuNotes(BuildContext context, Stream<List<Note>> listenStream) {
             builder: (context, snapshot) {
               //no data yet
               if (snapshot.data.length == 0) {
-                return Container(
+                return //Center(child: CircularProgressIndicator());
+                    Container(
                   child: ListTile(
                     onTap: null,
                     leading: Icon(

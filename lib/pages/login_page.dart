@@ -73,6 +73,7 @@ class _LoginPageState extends State<LoginPage> {
                               //hintText: "myPass ",
                             ),
                             autovalidate: false,
+                            //autovalidateMode: AutovalidateMode.disabled,
                             //muestra si no hay texto
                             validator: (String value) {
                               return (value.isEmpty) ? " ... " : null;

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:web_app/controllers/noteController_controller.dart';
 import 'package:web_app/firebase/authentication_service.dart';
 import 'package:web_app/firebase/firestore_service.dart';
+import 'package:web_app/pages/home_page.dart';
 
 import 'package:web_app/widgets/pageRouter_widget.dart';
 
@@ -38,7 +39,7 @@ class MyWebApp extends StatelessWidget {
       ],
       child: MaterialApp(
           title: "myWebApp",
-          //HomePage(),
+          //, HomePage()
           home: PageRouter("/"),
           debugShowCheckedModeBanner: false,
           onUnknownRoute: (settings) {

@@ -30,10 +30,12 @@ class Firestore {
 
     print("getting firebase stream  from: " + path);
 
-    return firestoreInstance.collection(path + "/notes").snapshots().map(
-        (snapshot) =>
-            snapshot.docs.map((item) => Note.fromDocs(item)).toList());
+    return firestoreInstance
+        .collection(path + "/notes")
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((item) => Note.fromDocs(item)).toList());
   }
+  
 
   //use implementation of firebaseData
   firestoreCREATE(Note data) async {
